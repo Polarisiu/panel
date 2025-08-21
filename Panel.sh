@@ -21,42 +21,42 @@ menu() {
     case $choice in
         1)
             echo -e "${GREEN}正在运行国内宝塔面板脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/baota.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/baota.sh)
             pause
             ;;
         2)
             echo -e "${GREEN}正在运行国际版宝塔脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/gjbaota.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/gjbaota.sh)
             pause
             ;;
         3)
             echo -e "${GREEN}正在运行开心版宝塔脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/kxbaota.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/kxbaota.sh)
             pause
             ;;
         4)
             echo -e "${GREEN}正在运行 1Panel 面板脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/1Panel.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/1Panel.sh)
             pause
             ;;
         5)
             echo -e "${GREEN}正在运行 1Panel 拓展应用脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/ppanel.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/tz1panel.sh)
             pause
             ;;
         6)
             echo -e "${GREEN}正在运行 1Panel v1 开心版脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/kx1Panelv1.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/kx1Panelv1.sh)
             pause
             ;;
         7)
             echo -e "${GREEN}正在运行 1Panel v2 开心版脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/kx1Panelv2.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/kx1Panelv2.sh)
             pause
             ;;
         8)
             echo -e "${GREEN}正在运行耗子面板脚本...${RESET}"
-            bash <(curl -sL https://raw.githubusercontent.com/iu683/app-store/main/haozi.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/haozi.sh)
             pause
             ;;
         0)
