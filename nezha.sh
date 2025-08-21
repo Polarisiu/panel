@@ -34,7 +34,7 @@ menu() {
             ;;
         4)
             echo -e "${GREEN}正在安装 V1 哪吒监控...${RESET}"
-            bash <(curl -fsSL https://raw.githubusercontent.com/Polarisiu/app-store/main/aznezha.sh)
+            bash <(curl -fsSL https://raw.githubusercontent.com/Polarisiu/panel/main/aznezha.sh)
             pause
             ;;
         5)
