@@ -9,9 +9,10 @@ menu() {
     echo -e "${GREEN}=== V1 哪吒监控管理菜单 ===${RESET}"
     echo -e "${GREEN}1) 安装 unzip${RESET}"
     echo -e "${GREEN}2) 安装 Docker + Docker Compose${RESET}"
-    echo -e "${GREEN}3) 运行 Nginx 反代 + TLS${RESET}"
+    echo -e "${GREEN}3) 运行 Nginx 反代${RESET}"
     echo -e "${GREEN}4) 安装 哪吒 v1${RESET}"
-    echo -e "${GREEN}5) 卸载 Agent${RESET}"
+    echo -e "${GREEN}5) 安装 哪吒 v1(国内)${RESET}"
+    echo -e "${GREEN}6) 卸载 Agent${RESET}"
     echo -e "${GREEN}0) 退出${RESET}"
     echo
     read -p $'\033[32m请选择操作 (0-5): \033[0m' choice
@@ -23,12 +24,12 @@ menu() {
             ;;
         2)
             echo -e "${GREEN}正在安装 Docker + Docker Compose...${RESET}"
-            wget -O 1keji_docker.sh "https://raw.githubusercontent.com/1keji/SiteSetup/main/1keji_docker.sh" && chmod +x 1keji_docker.sh && ./1keji_docker.sh
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/app-store/main/Docker.sh)
             pause
             ;;
         3)
-            echo -e "${GREEN}正在运行 Nginx 反代 + TLS...${RESET}"
-            wget -O manage_nginx_v6.sh "https://raw.githubusercontent.com/1keji/AddIPv6/main/manage_nginx_v6.sh" && chmod +x manage_nginx_v6.sh && ./manage_nginx_v6.sh
+            echo -e "${GREEN}正在运行 Nginx 反代...${RESET}"
+            bash <(curl -fsSL https://raw.githubusercontent.com/Polarisiu/tool/main/Webssl.sh)
             pause
             ;;
         4)
@@ -37,8 +38,13 @@ menu() {
             pause
             ;;
         5)
+            echo -e "${GREEN}正在安装 哪吒 v1(国内)...${RESET}"
+            curl -L https://gitee.com/naibahq/scripts/raw/main/install.sh -o nezha.sh && chmod +x nezha.sh && sudo CN=true ./nezha.sh
+            pause
+            ;;
+        6)
             echo -e "${GREEN}正在卸载 Agent...${RESET}"
-            bash <(curl -fsSL https://raw.githubusercontent.com/SimonGino/Config/master/sh/uninstall_nezha_agent.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/nzagent.sh)
             pause
             ;;
         0)
