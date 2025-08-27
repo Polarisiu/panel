@@ -12,6 +12,7 @@ menu() {
     echo -e "${GREEN}3) V0 关闭 SSH 功能${RESET}"
     echo -e "${GREEN}4) V1 哪吒监控安装${RESET}"
     echo -e "${GREEN}5) V1 关闭 SSH 功能${RESET}"
+    echo -e "${GREEN}6) 卸载Agent${RESET}"
     echo -e "${GREEN}0) 退出${RESET}"
     echo
     read -p $'\033[32m请选择操作 (0-5): \033[0m' choice
@@ -43,6 +44,11 @@ menu() {
             systemctl restart nezha-agent
             pause
             ;;
+        6)
+            echo -e "${GREEN}卸载 Agent...${RESET}"
+            bash <(curl -sL https://raw.githubusercontent.com/Polarisiu/panel/main/nzagent.sh)
+            pause
+            ;;   
         0)
             exit 0
             ;;
