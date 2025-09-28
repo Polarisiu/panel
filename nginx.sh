@@ -68,8 +68,8 @@ EOF
 
     echo -e "${GREEN}✅ Nginx Proxy Manager 已启动${RESET}"
     echo -e "${GREEN}🌐 Web UI 地址: http://$(get_ip):$ADMIN_PORT${RESET}"
-    echo -e "${GREEN}初始用户名: admin@example.com${RESET}"
-    echo -e "${GREEN}初始密码: changeme${RESET}"
+    echo -e "${GREEN}   初始用户名: admin@example.com${RESET}"
+    echo -e "${GREEN}   初始密码: changeme${RESET}"
     echo -e "${GREEN}📂 数据目录: $APP_DIR/data${RESET}"
     echo -e "${GREEN}🔐 Let's Encrypt 目录: $APP_DIR/letsencrypt${RESET}"
     read -p "按回车返回菜单..."
