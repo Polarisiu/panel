@@ -1,156 +1,103 @@
 #!/bin/bash
+# ========================================
+# Nginx Proxy Manager 一键管理脚本 (Docker Compose)
+# ========================================
 
 GREEN="\033[32m"
-YELLOW="\033[33m"
-RED="\033[31m"
 RESET="\033[0m"
-
-# 容器配置
-DOCKER_NAME="npm"
-DOCKER_IMG="jc21/nginx-proxy-manager:latest"
-DATA_PATH="/home/docker/npm/data"
-CERT_PATH="/home/docker/npm/letsencrypt"
-CONFIG_FILE="/home/docker/npm/config.conf"
+APP_NAME="nginx-proxy-manager"
+APP_DIR="/opt/$APP_NAME"
+COMPOSE_FILE="$APP_DIR/docker-compose.yml"
+CONFIG_FILE="$APP_DIR/config.env"
 
 # 获取公网 IP
-get_public_ip() {
-    local ip
-    ip=$(curl -s ipv4.ip.sb)
-    [[ -z "$ip" ]] && ip=$(curl -s ifconfig.me)
-    [[ -z "$ip" ]] && ip=$(curl -s ipinfo.io/ip)
-    if [[ -z "$ip" ]]; then
-        echo -e "${RED}无法获取公网 IP${RESET}"
-        return 1
-    fi
-    echo "$ip"
+get_ip() {
+    curl -s ifconfig.me || curl -s ip.sb || hostname -I | awk '{print $1}' || echo "127.0.0.1"
 }
 
-# ================== 初始化配置 ==================
-if [[ -f "$CONFIG_FILE" ]]; then
-    source "$CONFIG_FILE"
-else
-    read -p "请输入 NPM 面板端口 (默认 81): " input_port
-    DOCKER_PORT=${input_port:-81}
-    mkdir -p "$(dirname $CONFIG_FILE)"
-    echo "DOCKER_PORT=$DOCKER_PORT" > "$CONFIG_FILE"
-fi
-
-# ================== 函数 ==================
-docker_update_image() {
-    echo -e "${GREEN}正在拉取最新 NPM 镜像...${RESET}"
-    docker pull $DOCKER_IMG
-}
-
-docker_install() {
-    # 检测端口是否被占用
-    if lsof -i:$DOCKER_PORT -sTCP:LISTEN || lsof -i:80 -sTCP:LISTEN || lsof -i:443 -sTCP:LISTEN; then
-        echo -e "${RED}⚠️ 端口 $DOCKER_PORT / 80 / 443 已被占用，请先释放端口再运行 NPM${RESET}"
-        return 1
-    fi
-
-    mkdir -p "$DATA_PATH" "$CERT_PATH"
-    docker_update_image
-
-    if docker ps -a --format '{{.Names}}' | grep -q "^${DOCKER_NAME}$"; then
-        echo -e "${YELLOW}检测到已有 NPM 容器，无法重复安装，请选择更新或启动${RESET}"
-        return 1
-    fi
-
-    docker run -d \
-      --name=$DOCKER_NAME \
-      -p ${DOCKER_PORT}:81 \
-      -p 80:80 \
-      -p 443:443 \
-      -v $DATA_PATH:/data \
-      -v $CERT_PATH:/etc/letsencrypt \
-      --restart=always \
-      $DOCKER_IMG
-
-    local ip=$(get_public_ip)
-    echo -e "${GREEN}✅ Nginx Proxy Manager 已安装并启动${RESET}"
-    echo -e "${GREEN}管理面板地址: http://${ip}:${DOCKER_PORT}${RESET}"
-    echo -e "${GREEN}初始用户名: admin@example.com${RESET}"
-    echo -e "${GREEN}初始密码: changeme${RESET}"
-}
-
-docker_update() {
-    docker_update_image
-
-    if docker ps -a --format '{{.Names}}' | grep -q "^${DOCKER_NAME}$"; then
-        echo -e "${YELLOW}停止旧容器并删除（保留数据）...${RESET}"
-        docker stop $DOCKER_NAME
-        docker rm $DOCKER_NAME
-    fi
-
-    docker run -d \
-      --name=$DOCKER_NAME \
-      -p ${DOCKER_PORT}:81 \
-      -p 80:80 \
-      -p 443:443 \
-      -v $DATA_PATH:/data \
-      -v $CERT_PATH:/etc/letsencrypt \
-      --restart=always \
-      $DOCKER_IMG
-
-    local ip=$(get_public_ip)
-    echo -e "${GREEN}✅ NPM 已更新并重启${RESET}"
-    echo -e "${GREEN}管理面板地址: http://${ip}:${DOCKER_PORT}${RESET}"
-}
-
-docker_remove() {
-    docker rm -f $DOCKER_NAME 2>/dev/null
-    echo -e "${GREEN}✅ NPM 已卸载${RESET}"
-    # 删除数据
-    rm -rf "$DATA_PATH" "$CERT_PATH" "$CONFIG_FILE"
-    echo -e "${RED}数据目录已删除${RESET}"
-}
-
-docker_logs() {
-    docker logs -f $DOCKER_NAME
-}
-
-docker_start() {
-    docker start $DOCKER_NAME
-}
-
-docker_stop() {
-    docker stop $DOCKER_NAME
-}
-
-docker_restart() {
-    docker restart $DOCKER_NAME
-}
-
-# ================== 菜单 ==================
-menu() {
+function menu() {
     clear
-    echo -e "${GREEN}=== Nginx Proxy Manager 一键管理菜单 ===${RESET}"
-    echo -e "${GREEN}1. 安装 NPM${RESET}"
-    echo -e "${GREEN}2. 更新 NPM${RESET}"
-    echo -e "${GREEN}3. 启动 NPM${RESET}"
-    echo -e "${GREEN}4. 停止 NPM${RESET}"
-    echo -e "${GREEN}5. 重启 NPM${RESET}"
-    echo -e "${GREEN}6. 查看日志${RESET}"
-    echo -e "${GREEN}7. 卸载 NPM${RESET}"
-    echo -e "${GREEN}0. 退出${RESET}"
-    echo -e "${GREEN}=========================================${RESET}"
-    read -p $'\033[32m请输入选项: \033[0m' choice
-
+    echo -e "${GREEN}=== Nginx Proxy Manager 管理菜单 ===${RESET}"
+    echo -e "${GREEN}1) 安装启动${RESET}"
+    echo -e "${GREEN}2) 更新${RESET}"
+    echo -e "${GREEN}3) 卸载(含数据)${RESET}"
+    echo -e "${GREEN}4) 查看日志${RESET}"
+    echo -e "${GREEN}0) 退出${RESET}"
+    echo -e "${GREEN}=======================${RESET}"
+    read -p "请选择: " choice
     case $choice in
-        1) docker_install ;;
-        2) docker_update ;;
-        3) docker_start ;;
-        4) docker_stop ;;
-        5) docker_restart ;;
-        6) docker_logs ;;
-        7) docker_remove ;;
+        1) install_app ;;
+        2) update_app ;;
+        3) uninstall_app ;;
+        4) view_logs ;;
         0) exit 0 ;;
-        *) echo -e "${RED}无效选项${RESET}" ;;
+        *) echo "无效选择"; sleep 1; menu ;;
     esac
 }
 
-# ================== 主循环 ==================
-while true; do
+function install_app() {
+    # 自定义管理端口，默认 81
+    read -p "请输入 管理端口 [默认:81]: " input_admin
+    ADMIN_PORT=${input_admin:-81}
+
+    # 创建统一文件夹
+    mkdir -p "$APP_DIR/data" "$APP_DIR/letsencrypt"
+
+    # 生成 docker-compose.yml
+    cat > "$COMPOSE_FILE" <<EOF
+
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'       # HTTP 固定
+      - '${ADMIN_PORT}:81'  # 管理端口可自定义
+      - '443:443'     # HTTPS 固定
+    volumes:
+      - $APP_DIR/data:/data
+      - $APP_DIR/letsencrypt:/etc/letsencrypt
+EOF
+
+    # 保存配置
+    echo "ADMIN_PORT=$ADMIN_PORT" > "$CONFIG_FILE"
+
+    # 启动容器
+    cd "$APP_DIR"
+    docker compose up -d
+
+    echo -e "${GREEN}✅ Nginx Proxy Manager 已启动${RESET}"
+    echo -e "${GREEN}🌐 Web UI 地址: http://$(get_ip):$ADMIN_PORT${RESET}"
+    echo -e "${GREEN}初始用户名: admin@example.com${RESET}"
+    echo -e "${GREEN}初始密码: changeme${RESET}"
+    echo -e "${GREEN}📂 数据目录: $APP_DIR/data${RESET}"
+    echo -e "${GREEN}🔐 Let's Encrypt 目录: $APP_DIR/letsencrypt${RESET}"
+    read -p "按回车返回菜单..."
     menu
-    read -p $'\033[32m按回车返回菜单...\033[0m' foo
-done
+}
+
+function update_app() {
+    cd "$APP_DIR" || { echo "未检测到安装目录，请先安装"; sleep 1; menu; }
+    docker compose pull
+    docker compose up -d
+    echo -e "${GREEN}✅ Nginx Proxy Manager 已更新并重启完成${RESET}"
+    read -p "按回车返回菜单..."
+    menu
+}
+
+function uninstall_app() {
+    cd "$APP_DIR" || { echo "未检测到安装目录"; sleep 1; menu; }
+    docker compose down -v
+    rm -rf "$APP_DIR"
+    echo -e "${GREEN}✅ Nginx Proxy Manager 已卸载，数据已删除${RESET}"
+    read -p "按回车返回菜单..."
+    menu
+}
+
+function view_logs() {
+    docker logs -f app
+    read -p "按回车返回菜单..."
+    menu
+}
+
+menu
