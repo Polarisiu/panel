@@ -11,8 +11,7 @@ menu() {
     echo -e "${GREEN}2) 更新到最新 v2.0.8${RESET}"
     echo -e "${GREEN}3) 卸载 1Panel v2 开心版${RESET}"
     echo -e "${GREEN}0) 退出${RESET}"
-    echo
-    read -p $'\033[32m请选择操作 (0-3): \033[0m' choice
+    read -p $'\033[32m请选择操作: \033[0m' choice
     case $choice in
         1)
             echo -e "${GREEN}正在安装部署 1Panel v2 开心版...${RESET}"
