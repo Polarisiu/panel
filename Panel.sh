@@ -7,17 +7,17 @@ RESET="\033[0m"
 menu() {
     clear
     echo -e "${GREEN}=== 面板管理总菜单 ===${RESET}"
-    echo -e "${GREEN}1)  宝塔面板${RESET}"
-    echo -e "${GREEN}2)  国际版宝塔${RESET}"
-    echo -e "${GREEN}3)  开心版宝塔${RESET}"
-    echo -e "${GREEN}4)  1Panel 面板${RESET}"
-    echo -e "${GREEN}5)  1Panel 面板拓展应用${RESET}"
-    echo -e "${GREEN}6)  1Panel v1 开心版${RESET}"
-    echo -e "${GREEN}7)  1Panel v2 开心版${RESET}"
-    echo -e "${GREEN}8)  耗子面板${RESET}"
-    echo -e "${GREEN}9)  PandaWiki文档${RESET}"
+    echo -e "${GREEN} 1) 宝塔面板${RESET}"
+    echo -e "${GREEN} 2) 国际版宝塔${RESET}"
+    echo -e "${GREEN} 3) 开心版宝塔${RESET}"
+    echo -e "${GREEN} 4) 1Panel 面板${RESET}"
+    echo -e "${GREEN} 5) 1Panel 面板拓展应用${RESET}"
+    echo -e "${GREEN} 6) 1Panel v1 开心版${RESET}"
+    echo -e "${GREEN} 7) 1Panel v2 开心版${RESET}"
+    echo -e "${GREEN} 8) 耗子面板${RESET}"
+    echo -e "${GREEN} 9) PandaWiki文档${RESET}"
     echo -e "${GREEN}10) 雷池WAF${RESET}"
-    echo -e "${GREEN}0)  退出${RESET}"
+    echo -e "${GREEN} 0) 退出${RESET}"
     read -p $'\033[32m请选择操作: \033[0m' choice
     case $choice in
         1)
