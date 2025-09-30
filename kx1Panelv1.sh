@@ -8,7 +8,7 @@ menu() {
     clear
     echo -e "${GREEN}=== 1Panel v1 开心版 管理菜单 ===${RESET}"
     echo -e "${GREEN}1) 安装部署 v1${RESET}"
-    echo -e "${GREEN}2) 更新 v1.10.32-lts v1${RESET}"
+    echo -e "${GREEN}2) 更新${RESET}"
     echo -e "${GREEN}3) 卸载 1Panel v1${RESET}"
     echo -e "${GREEN}0) 退出${RESET}"
     echo
@@ -20,7 +20,7 @@ menu() {
             pause
             ;;
         2)
-            echo -e "${GREEN}正在更新到 v1.10.32-lts v1...${RESET}"
+            echo -e "${GREEN}正在更新...${RESET}"
             curl https://resource.1panel.jp/1panel/package/update.sh | bash
             pause
             ;;
