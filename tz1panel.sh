@@ -11,8 +11,7 @@ menu() {
     echo -e "${GREEN}2) 国内机 1Panel 添加应用${RESET}"
     echo -e "${GREEN}3) 萌森软件拓展${RESET}"
     echo -e "${GREEN}0) 退出${RESET}"
-    echo
-    read -p $'\033[32m请选择操作 (0-3): \033[0m' choice
+    read -p $'\033[32m请选择操作: \033[0m' choice
     case $choice in
         1)
             echo -e "${GREEN}正在为国外机 1Panel 添加应用...${RESET}"
